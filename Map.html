@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groningen Map</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Georgia, sans-serif;
+        }
+
+        #map-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: url('map.png') center/cover no-repeat;
+            perspective: 1000px;
+        }
+
+        .marker {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: url('marker.png') center/cover no-repeat; /* Use your custom marker image */
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .marker:hover {
+            transform: scale(1.2);
+        }
+
+        .blur {
+        filter: blur(5px); /* Initial blur effect */
+        }
+
+        .popup {
+            position: absolute;
+            background-color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: none;
+            max-width: 300px; /* Set a maximum width for the popup */
+            white-space: normal; /* Allow normal white space handling */
+            overflow: auto; /* Enable scrollbars if the content exceeds the popup size */
+            font-family: 'Georgia', sans-serif;
+        }
+
+        .popup img {
+        max-width: 100%; /* Ensure images don't exceed the width of the popup */
+        height: 200px; /* Maintain aspect ratio */
+        margin-bottom: 10px; /* Add margin to separate image from other content */
+
+        }
+
+        .intro-popup {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+            z-index: 999; /* Ensure the popup is on top of other elements */
+            text-align: center;
+
+        }
+
+        .unblur {
+            filter: none; /* Remove blur effect */
+        }
+    </style>
+</head>
+<body>
+
+<div class="intro-popup">
+    <h2 style="line-height: 0.2;">Welcome to this interactive map of Groningen!</h2>
+    <p style="line-height: 0.2;">By Isa Hamelink</p>
+    <h3 style="line-height: 0.2;">Click on any of the map markers to learn something about the city's past</h3> 
+    <p style="line-height: 3;">Click anywhere to start!</p>
+    <div class="marker" style="margin: 70px auto 10px;"></div>
+</div>
+
+<div id="map-container">
+    <!-- Marker 1 -->
+    <div class="marker" id="marker1" style="left: 30%; top: 40%;"></div>
+    <!-- Marker 2 -->
+    <div class="marker" id="marker2" style="left: 60%; top: 60%;"></div>
+    <div class="marker" id="marker3" style="left: 40%; top: 50%;"></div>
+
+    <!-- Popup -->
+    <div id="popup" class="popup"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mapContainer = document.getElementById('map-container');
+        mapContainer.classList.add('blur');
+    });
+    
+    let markerContents = {
+        marker1: {
+            title: 'Test 1',
+            description: 'Lorum ipsum dolores Lorum ipsum dolores Lorum ipsum dolores Lorum ipsum dolores Lorum ipsum dolores Lorum ipsum dolores Lorum ipsum dolores',
+            imageUrl: '1.jpeg'
+        },
+        marker2: {
+            title: 'Test 2',
+            description: 'Text goes here',
+            imageUrl: '2.jpg'
+        },
+        marker3: {
+            title: 'Test 3',
+            description: 'Text goes here',
+            imageUrl: '3.jpg'
+        }
+        // Add more markers as needed
+    };
+    let selectedMarkerId = null;
+    let offsetX = 0;
+    let scale = 1;
+
+    function togglePopup(markerId) {
+        const popup = document.getElementById('popup');
+        const marker = document.getElementById(markerId);
+
+        const content = markerContents[markerId];
+
+        if (selectedMarkerId === markerId && popup.style.display !== 'none') {
+            // Hide popup if clicking on the same marker
+            hidePopup();
+        } else {
+            // Show popup for the selected marker
+            const rect = marker.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            popup.innerHTML = `
+                <h3>${content.title}</h3>
+                <p>${content.description}</p>
+                <img src="${content.imageUrl}" alt="${content.title}">
+            `;
+
+            popup.style.left = centerX + 'px';
+            popup.style.top = centerY + 'px';
+            popup.style.display = 'block';
+
+            selectedMarkerId = markerId;
+        }
+    }
+
+    function hidePopup() {
+        const popup = document.getElementById('popup');
+        popup.style.display = 'none';
+        selectedMarkerId = null;
+    }
+
+    const mapContainer = document.getElementById('map-container');
+
+    mapContainer.addEventListener('mousemove', (e) => {
+        const sensitivity = 0.01; // Adjust this value for movement sensitivity
+        offsetX = (e.clientX - window.innerWidth / 2) * sensitivity;
+        updateTransform();
+    });
+
+    document.addEventListener('click', function () {
+        const introPopup = document.querySelector('.intro-popup');
+        const mapContainer = document.getElementById('map-container');
+
+        // Hide the intro-popup
+        introPopup.style.display = 'none';
+
+        // Remove blur effect from the map container
+        mapContainer.classList.add('unblur');
+
+        // Remove the event listener to prevent further clicks from affecting the intro-popup
+        document.removeEventListener('click', arguments.callee);
+    });
+
+    // Add click event listener to toggle popup when clicking on a marker
+    mapContainer.addEventListener('click', (e) => {
+        const popup = document.getElementById('popup');
+        const isMarker = e.target.classList.contains('marker');
+        
+        if (isMarker) {
+            const markerId = e.target.id;
+            togglePopup(markerId, 'Sample Title', 'Sample Description', 'sample-image.jpg');
+        } else {
+            hidePopup();
+        }
+    });
+
+    function updateTransform() {
+        mapContainer.style.transform = `translateX(${offsetX}px) scale(${scale})`;
+    }
+</script>
+
+</body>
+</html>
