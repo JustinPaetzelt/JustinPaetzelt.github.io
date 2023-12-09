@@ -121,9 +121,31 @@
         }
 
         .legend-icon .circle-2 {
-            background-color: #33ff57; /* Circle 2 color */
+            background-color: #00a01d; /* Circle 2 color */
         }
-    </style>
+
+        .legend-icon .circle-3 {
+            background-color: #004ffa; /* Circle 3 color */
+        }
+
+        @media only screen and (max-width: 600px) {
+        /* Adjustments for small screens (e.g., mobile devices) */
+
+            #map-container {
+                background-size: cover;
+            }
+
+            .marker {
+                width: 15px;
+                height: 15px;
+            }
+
+            .legend-box {
+                right: 20px;
+                width: auto;
+            }
+        }
+        </style>
 </head>
 <body>
 
@@ -150,11 +172,15 @@
     <div class="legend-title">Legend</div>
     <div class="legend-icon">
         <div class="circle-1"></div> <!-- Circle placeholder -->
-        Icon 1 - Dogs and cats
+        Working
     </div>
     <div class="legend-icon">
         <div class="circle-2"></div> <!-- Circle placeholder -->
-        Icon 2
+        Living Space         
+    </div>
+    <div class="legend-icon">
+        <div class="circle-3"></div> <!-- Circle placeholder -->
+        Working + Living Space        
     </div>
 </div>
 
