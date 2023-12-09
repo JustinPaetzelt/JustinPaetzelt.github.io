@@ -51,10 +51,9 @@
         }
 
         .popup img {
-        max-width: 100%; /* Ensure images don't exceed the width of the popup */
-        height: 200px; /* Maintain aspect ratio */
-        margin-bottom: 10px; /* Add margin to separate image from other content */
-
+            max-width: 100%; /* Ensure images don't exceed the width of the popup */
+            height: 200px; /* Maintain aspect ratio */
+            margin-bottom: 10px; /* Add margin to separate image from other content */
         }
 
         .intro-popup {
@@ -78,6 +77,52 @@
         .unblur {
             filter: none; /* Remove blur effect */
         }
+
+        .legend-box {
+            position: fixed;
+            bottom: 20px;
+            right: 100px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: flex;
+            flex-direction: column; /* Ensure vertical stacking of elements */
+            align-items: center;
+            min-width: 100px; /* Set a minimum width to prevent extreme shrinking */
+            white-space: nowrap; /* Prevent text from wrapping */
+            width: 200px;
+        }
+
+        .legend-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            white-space: nowrap;
+        }
+
+        .legend-icon {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .legend-icon div {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc; /* Placeholder background color */
+            border-radius: 50%;
+            margin-right: 8px; /* Adjust the margin between the circle and text */
+        }
+        
+        .legend-icon .circle-1 {
+            background-color: #ff5733; /* Circle 1 color */
+        }
+
+        .legend-icon .circle-2 {
+            background-color: #33ff57; /* Circle 2 color */
+        }
     </style>
 </head>
 <body>
@@ -85,7 +130,7 @@
 <div class="intro-popup">
     <h2 style="line-height: 0.2;">Welcome to this interactive map of Groningen!</h2>
     <p style="line-height: 0.2;">By Isa Hamelink</p>
-    <h3 style="line-height: 0.2;">Click on any of the map markers to learn something about the city</h3> 
+    <h3 style="line-height: 0.2;">Click on any of the map markers to learn something about the city's past</h3> 
     <p style="line-height: 3;">Click anywhere to start!</p>
     <div class="marker" style="margin: 70px auto 10px;"></div>
 </div>
@@ -101,12 +146,26 @@
     <div id="popup" class="popup"></div>
 </div>
 
+<div class="legend-box blur" id="legend-box">
+    <div class="legend-title">Legend</div>
+    <div class="legend-icon">
+        <div class="circle-1"></div> <!-- Circle placeholder -->
+        Icon 1 - Dogs and cats
+    </div>
+    <div class="legend-icon">
+        <div class="circle-2"></div> <!-- Circle placeholder -->
+        Icon 2
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const mapContainer = document.getElementById('map-container');
+        const legendBox = document.getElementById('legend-box');
         mapContainer.classList.add('blur');
+        legendBox.classList.add('blur');
     });
-    
+
     let markerContents = {
         marker1: {
             title: 'Test 1',
@@ -127,6 +186,7 @@
     };
     let selectedMarkerId = null;
     let offsetX = 0;
+    let offsetY = 0;
     let scale = 1;
 
     function togglePopup(markerId) {
@@ -169,28 +229,53 @@
     mapContainer.addEventListener('mousemove', (e) => {
         const sensitivity = 0.01; // Adjust this value for movement sensitivity
         offsetX = (e.clientX - window.innerWidth / 2) * sensitivity;
+        offsetY = (e.clientY - window.innerHeight / 2) * sensitivity;
+        updateTransform();
+    });
+
+    mapContainer.addEventListener('wheel', (e) => {
+        // Adjust this value to control zoom speed
+        const zoomSpeed = 0.0;
+
+        const mouseX = e.clientX - window.innerWidth / 2;
+        const mouseY = e.clientY - window.innerHeight / 2;
+
+        if (e.deltaY > 0) {
+            // Zoom out
+            scale -= zoomSpeed;
+        } else {
+            // Zoom in
+            scale += zoomSpeed;
+        }
+
+        // Ensure scale stays within a reasonable range
+        scale = Math.max(0.5, Math.min(scale, 2));
+
+        // Adjust translation to zoom around the mouse position
+        offsetX = mouseX - (mouseX - offsetX) * scale;
+        offsetY = mouseY - (mouseY - offsetY) * scale;
+
         updateTransform();
     });
 
     document.addEventListener('click', function () {
         const introPopup = document.querySelector('.intro-popup');
         const mapContainer = document.getElementById('map-container');
+        const legendBox = document.getElementById('legend-box');
 
         // Hide the intro-popup
         introPopup.style.display = 'none';
 
         // Remove blur effect from the map container
         mapContainer.classList.add('unblur');
-
-        // Remove the event listener to prevent further clicks from affecting the intro-popup
-        document.removeEventListener('click', arguments.callee);
+        legendBox.classList.add('unblur');
     });
 
     // Add click event listener to toggle popup when clicking on a marker
     mapContainer.addEventListener('click', (e) => {
         const popup = document.getElementById('popup');
         const isMarker = e.target.classList.contains('marker');
-        
+
         if (isMarker) {
             const markerId = e.target.id;
             togglePopup(markerId, 'Sample Title', 'Sample Description', 'sample-image.jpg');
@@ -200,7 +285,7 @@
     });
 
     function updateTransform() {
-        mapContainer.style.transform = `translateX(${offsetX}px) scale(${scale})`;
+        mapContainer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
     }
 </script>
 
