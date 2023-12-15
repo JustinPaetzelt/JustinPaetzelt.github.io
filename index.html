@@ -19,12 +19,32 @@
             perspective: 1000px;
         }
 
-        .marker {
+        .mark1 {
             position: absolute;
             width: 25px;
             height: 25px;
-            background: url('marker.png') center/cover no-repeat; /* Use your custom marker image */
             border-radius: 50%;
+            background-color: #ff5733; /* Circle 1 color */
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .mark2 {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #00a01d; /* Circle 2 color */
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .mark3 {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #004ffa; /* Circle 3 color */
             cursor: pointer;
             transition: transform 0.2s;
         }
@@ -154,15 +174,15 @@
     <p style="line-height: 0.2;">By Isa Hamelink</p>
     <h3 style="line-height: 0.2;">Click on any of the map markers to learn something about the city's past</h3> 
     <p style="line-height: 3;">Click anywhere to start!</p>
-    <div class="marker" style="margin: 70px auto 10px;"></div>
+    <div class="mark1" style="margin: 70px auto 10px; background: url('marker.png') center/cover no-repeat;"></div>
 </div>
 
 <div id="map-container">
     <!-- Marker 1 -->
-    <div class="marker" id="marker1" style="left: 30%; top: 40%;"></div>
+    <div class="mark1" id="marker1" style="left: 30%; top: 40%;"></div>
     <!-- Marker 2 -->
-    <div class="marker" id="marker2" style="left: 60%; top: 60%;"></div>
-    <div class="marker" id="marker3" style="left: 40%; top: 50%;"></div>
+    <div class="mark2" id="marker2" style="left: 60%; top: 60%;"></div>
+    <div class="mark3" id="marker3" style="left: 40%; top: 50%;"></div>
 
     <!-- Popup -->
     <div id="popup" class="popup"></div>
@@ -300,11 +320,13 @@
     // Add click event listener to toggle popup when clicking on a marker
     mapContainer.addEventListener('click', (e) => {
         const popup = document.getElementById('popup');
-        const isMarker = e.target.classList.contains('marker');
+        const isMarker = e.target.classList.contains('mark1') || 
+                        e.target.classList.contains('mark2') || 
+                        e.target.classList.contains('mark3');
 
         if (isMarker) {
             const markerId = e.target.id;
-            togglePopup(markerId, 'Sample Title', 'Sample Description', 'sample-image.jpg');
+            togglePopup(markerId);
         } else {
             hidePopup();
         }
