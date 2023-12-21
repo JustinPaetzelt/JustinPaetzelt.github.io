@@ -6,165 +6,160 @@
     <title>Groningen Map</title>
     <style>
         body {
-            margin: 0;
-            overflow: hidden;
-            font-family: Georgia, sans-serif;
-        }
+    margin: 0;
+    overflow: hidden;
+    font-family: Georgia, sans-serif;
+}
 
-        #map-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: url('map.png') center/cover no-repeat;
-            perspective: 1000px;
-        }
+#map-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: url('map.png') center/cover no-repeat;
+    perspective: 1000px;
+}
 
-        .mark1 {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-color: #ff5733; /* Circle 1 color */
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+.mark1 {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #ff5733; /* Circle 1 color */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
 
-        .mark2 {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-color: #00a01d; /* Circle 2 color */
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+.mark2 {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #00a01d; /* Circle 2 color */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
 
-        .mark3 {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-color: #004ffa; /* Circle 3 color */
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
+.mark3 {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #004ffa; /* Circle 3 color */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
 
-        .marker:hover {
-            transform: scale(1.2);
-        }
+.marker:hover {
+    transform: scale(1.2);
+}
 
-        .blur {
-        filter: blur(5px); /* Initial blur effect */
-        }
+.blur {
+    filter: blur(5px); /* Initial blur effect */
+}
 
-        .popup {
-            position: absolute;
-            background-color: #ffffff;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            display: none;
-            max-width: 300px; /* Set a maximum width for the popup */
-            white-space: normal; /* Allow normal white space handling */
-            overflow: auto; /* Enable scrollbars if the content exceeds the popup size */
-            font-family: 'Georgia', sans-serif;
-        }
+.popup {
+    position: absolute;
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    display: none;
+    width: auto;
+    max-width: 300px; /* Set a maximum width for the popup */
+    white-space: normal; /* Allow normal white space handling */
+    overflow: auto; /* Enable scrollbars if the content exceeds the popup size */
+    font-family: 'Georgia', sans-serif;
+}
 
-        .popup img {
-            max-width: 100%; /* Ensure images don't exceed the width of the popup */
-            height: 200px; /* Maintain aspect ratio */
-            margin-bottom: 10px; /* Add margin to separate image from other content */
-        }
+.popup img {
+    max-width: 100%; /* Ensure images don't exceed the width of the popup */
+    height: 200px; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Add margin to separate image from other content */
+}
 
-        .intro-popup {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-            z-index: 999; /* Ensure the popup is on top of other elements */
-            text-align: center;
+.intro-popup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    width: 80%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    z-index: 999; /* Ensure the popup is on top of other elements */
+    text-align: center;
+}
 
-        }
+.unblur {
+    filter: none; /* Remove blur effect */
+}
 
-        .unblur {
-            filter: none; /* Remove blur effect */
-        }
+.legend-box {
+    position: fixed;
+    bottom: 20px;
+    right: 100px;
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: flex;
+    flex-direction: column; /* Ensure vertical stacking of elements */
+    align-items: center;
+    min-width: 100px; /* Set a minimum width to prevent extreme shrinking */
+    white-space: nowrap; /* Prevent text from wrapping */
+    width: 200px;
+}
 
-        .legend-box {
-            position: fixed;
-            bottom: 20px;
-            right: 100px;
-            background-color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: flex;
-            flex-direction: column; /* Ensure vertical stacking of elements */
-            align-items: center;
-            min-width: 100px; /* Set a minimum width to prevent extreme shrinking */
-            white-space: nowrap; /* Prevent text from wrapping */
-            width: 200px;
-        }
+.legend-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    white-space: nowrap;
+}
 
-        .legend-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            white-space: nowrap;
-        }
+.legend-icon {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
 
-        .legend-icon {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
+.legend-icon div {
+    width: 30px;
+    height: 30px;
+    background-color: #ccc; /* Placeholder background color */
+    border-radius: 50%;
+    margin-right: 8px; /* Adjust the margin between the circle and text */
+}
 
-        .legend-icon div {
-            width: 30px;
-            height: 30px;
-            background-color: #ccc; /* Placeholder background color */
-            border-radius: 50%;
-            margin-right: 8px; /* Adjust the margin between the circle and text */
-        }
-        
-        .legend-icon .circle-1 {
-            background-color: #ff5733; /* Circle 1 color */
-        }
+.legend-icon .circle-1 {
+    background-color: #ff5733; /* Circle 1 color */
+}
 
-        .legend-icon .circle-2 {
-            background-color: #00a01d; /* Circle 2 color */
-        }
+.legend-icon .circle-2 {
+    background-color: #00a01d; /* Circle 2 color */
+}
 
-        .legend-icon .circle-3 {
-            background-color: #004ffa; /* Circle 3 color */
-        }
+.legend-icon .circle-3 {
+    background-color: #004ffa; /* Circle 3 color */
+}
 
-        @media only screen and (max-width: 600px) {
-        /* Adjustments for small screens (e.g., mobile devices) */
+@media only screen and (max-width: 600px) {
+    .popup {
+        max-width: 90%;
+    }
 
-            #map-container {
-                background-size: cover;
-            }
+    .intro-popup {
+        max-width: 90%;
+        font-size: 16px; /* Adjust font size for smaller screens */
+    }
+}
 
-            .marker {
-                width: 15px;
-                height: 15px;
-            }
-
-            .legend-box {
-                right: 20px;
-                width: auto;
-            }
-        }
         </style>
 </head>
 <body>
@@ -183,6 +178,7 @@
     <!-- Marker 2 -->
     <div class="mark2" id="marker2" style="left: 60%; top: 60%;"></div>
     <div class="mark3" id="marker3" style="left: 40%; top: 50%;"></div>
+    <div class="mark3" id="marker4" style="left: 50%; top: 70%;"></div>
 
     <!-- Popup -->
     <div id="popup" class="popup"></div>
@@ -227,6 +223,11 @@
             title: 'Test 3',
             description: 'Text goes here',
             imageUrl: '3.jpg'
+        },
+        marker4: {
+            title: 'Test 4',
+            description: 'Text goes here',
+            imageUrl: '3.jpg'
         }
         // Add more markers as needed
     };
@@ -247,8 +248,13 @@
         } else {
             // Show popup for the selected marker
             const rect = marker.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
             const centerY = rect.top + rect.height / 2;
+
+            // Check if the marker is closer to the bottom of the map/screen
+            const isCloserToBottom = centerY > window.innerHeight / 2;
+
+            // Adjust vertical position of the popup based on marker position
+            const popupTop = isCloserToBottom ? rect.top - popup.offsetHeight : rect.bottom;
 
             popup.innerHTML = `
                 <h3>${content.title}</h3>
@@ -256,13 +262,15 @@
                 <img src="${content.imageUrl}" alt="${content.title}">
             `;
 
-            popup.style.left = centerX + 'px';
-            popup.style.top = centerY + 'px';
+            popup.style.left = rect.left + rect.width / 2 + 'px';
+            popup.style.top = popupTop + 'px';
             popup.style.display = 'block';
 
             selectedMarkerId = markerId;
         }
     }
+
+
 
     function hidePopup() {
         const popup = document.getElementById('popup');
