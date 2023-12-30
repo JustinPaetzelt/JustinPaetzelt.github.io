@@ -19,6 +19,16 @@
     perspective: 1000px;
 }
 
+.mark0 {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #ff5733; /* Circle 1 color */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
 .mark1 {
     position: absolute;
     width: 25px;
@@ -49,6 +59,16 @@
     transition: transform 0.2s;
 }
 
+.mark4 {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background-color: #ab00fa; /* Circle 4 color */
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
 .marker:hover {
     transform: scale(1.2);
 }
@@ -58,7 +78,10 @@
 }
 
 .popup {
-    position: absolute;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -60%);
     background-color: #ffffff;
     padding: 10px;
     border-radius: 5px;
@@ -149,6 +172,10 @@
     background-color: #004ffa; /* Circle 3 color */
 }
 
+.legend-icon .circle-4 {
+    background-color: #ab00fa; /* Circle 3 color */
+}
+
 @media only screen and (max-width: 600px) {
     .popup {
         max-width: 90%;
@@ -169,16 +196,33 @@
     <p style="line-height: 0.2;">By Isa Hamelink</p>
     <h3 style="line-height: 0.2;">Click on any of the map markers to learn something about the city's past</h3> 
     <p style="line-height: 3;">Click anywhere to start!</p>
-    <div class="mark1" style="margin: 70px auto 10px; background: url('marker.png') center/cover no-repeat;"></div>
+    <div class="mark0" style="margin: 70px auto 10px; background: url('marker.png') center/cover no-repeat;"></div>
 </div>
 
 <div id="map-container">
-    <!-- Marker 1 -->
-    <div class="mark1" id="marker1" style="left: 30%; top: 40%;"></div>
-    <!-- Marker 2 -->
-    <div class="mark2" id="marker2" style="left: 60%; top: 60%;"></div>
-    <div class="mark3" id="marker3" style="left: 40%; top: 50%;"></div>
-    <div class="mark3" id="marker4" style="left: 50%; top: 70%;"></div>
+    <div class="mark1" id="marker1"></div>
+    <div class="mark2" id="marker2"></div>
+    <div class="mark2" id="marker3"></div>
+    <div class="mark3" id="marker4"></div>
+    <div class="mark3" id="marker5"></div>
+    <div class="mark3" id="marker6"></div>
+    <div class="mark4" id="marker7"></div>
+    <div class="mark4" id="marker8"></div>
+    <div class="mark3" id="marker9"></div>
+    <div class="mark3" id="marker10"></div>
+    <div class="mark4" id="marker11"></div>
+    <div class="mark2" id="marker12"></div>
+    <div class="mark2" id="marker15"></div>
+    <div class="mark4" id="marker16"></div>
+    <div class="mark3" id="marker17"></div>
+    <div class="mark2" id="marker18"></div>
+    <div class="mark4" id="marker19"></div>
+    <div class="mark4" id="marker20"></div>
+    <div class="mark3" id="marker21"></div>
+    <div class="mark2" id="marker22"></div>
+
+
+
 
     <!-- Popup -->
     <div id="popup" class="popup"></div>
@@ -188,15 +232,19 @@
     <div class="legend-title">Legend</div>
     <div class="legend-icon">
         <div class="circle-1"></div> <!-- Circle placeholder -->
-        Working
+        Arrested
     </div>
     <div class="legend-icon">
         <div class="circle-2"></div> <!-- Circle placeholder -->
-        Living Space         
+        Living         
     </div>
     <div class="legend-icon">
         <div class="circle-3"></div> <!-- Circle placeholder -->
-        Working + Living Space        
+        Working        
+    </div>
+    <div class="legend-icon">
+        <div class="circle-4"></div> <!-- Circle placeholder -->
+        Living and Working      
     </div>
 </div>
 
@@ -210,25 +258,106 @@
 
     let markerContents = {
         marker1: {
-            title: 'Test 1',
-            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua',
-            imageUrl: '1.jpeg'
+            title: 'Near Aa-poort',
+            description: 'This is where Renske Harkema was arrested. She had delivered a baby and it was likely that a midwife had told the authorities about this—as it was mandatory for them to report any woman who had delivered a baby without being married. It seems that this event started the case against Krook and Mennes. Vrouke Davids was brought outside the city here, but came back soon after to work as a prostitute again, after which she was arrested and convicted.',
+            imageUrl: null,
         },
         marker2: {
-            title: 'Test 2',
-            description: 'Text goes here',
-            imageUrl: '2.jpg'
+            title: 'Burgerweeshuis',
+            description: 'Tietje Hopman, Renske Harkema and Hillegien Bruins were all orphans, and lived in the Burgerweeshuis. A Burgerweeshuis was generally for children whose parents were well-to-do. The three girls (possibly more) were picked up by Berent Krook, the 16-year-old brother of Johannes Krook, and brought to several locations in the city.',
+            imageUrl: 'marker2.jpg'
         },
         marker3: {
-            title: 'Test 3',
-            description: 'Text goes here',
-            imageUrl: '3.jpg'
+            title: 'A house "aan der Aa"',
+            description: 'Johannes Krook, “borgertamboer”, and Tietske Mennes (husband and wife) pimped out orphan girls. They likely lived in this house, which they owned among other places within the city. There are at least 3 girls connected to this case, but it seems that it could be much more from the hearings and connected cases, around 9.',
+            imageUrl: null,
         },
         marker4: {
-            title: 'Test 4',
-            description: 'Text goes here',
-            imageUrl: '3.jpg'
+            title: 'House in Bloemstraat',
+            description: 'Renske Harkema was brought here by Berent Krook. She was sexually abused here by an older man, who pushed her onto a bed when she wanted to leave. She got pregnant at this point. She received a “schilling” for this from the man. One Egbertie, who worked as a prostitute, also lived (and worked?) here.',
+            imageUrl: null,
+        },
+        marker5: {
+            title: 'Coldegat',
+            description: 'Renske Harkema worked here for Tietske Mennes and Johannes Krook. Hillegien Bruins has been in this location as well, likely to work.',
+            imageUrl: null,
+        },
+        marker6: {
+            title: 'Oosterstraat',
+            description: 'Hillegien Bruins worked in a building in this street for Tietske Mennes and Johannes Krook.',
+            imageUrl: null,
+        },
+        marker7: {
+            title: 'Oude Ebbingestraat',
+            description: 'Wijtske Johannes Van Schinken lived here for a while, and it is possible she may have worked here, as she was sent away by the owner’s (Coopman Knijpinga) wife after a fight. Van Schinken knitted to make a living, and probably worked in prostitution to make ends meet. Johannes Krook and Tietske Mennes named this street as a location where they had had prostitutes work for them as well.',
+            imageUrl: null,
+        },
+        marker8: {
+            title: 'Kleine Peperstraat',
+            description: 'One prostitute called Margien lived here. It is not certain whether she worked here as well. She had run away from the Burgerweeshuis a few years before her arrest. In another case, Pieter Hindriks was accused of owning a brothel here, and was convicted in 1773.',
+            imageUrl: null,
+        },
+        marker9: {
+            title: 'Herberg de Koning van Engeland',
+            description: 'Wijtske Johannes Van Schinken named this inn as one of the places that she worked.',
+            imageUrl: 'marker9.jpg',
+        },
+        marker10: {
+            title: 'De Jagtwaagen',
+            description: 'Wijtske Johannes Van Schinken named this inn as one of the places that she worked.',
+            imageUrl: 'marker10.jpg',
+        },
+        marker11: {
+            title: 'De Karper',
+            description: 'Wijtske Johannes Van Schinken named this place in her hearings. From her confession, it seems the daughter of the owner worked as a prostitute. It is not entirely certain whether she really worked here or not, as I have not had the chance to track down a trial or case against her.',
+            imageUrl: null,
+        },
+        marker12: {
+            title: 'Plumersgang',
+            description: 'Wijtske Johannes Van Schinken named this place as the place where prostitute Griette Jans lived with her grandmother. According to Van Schinken she also worked for Krook in his house.',
+            imageUrl: null,
+        },
+        marker15: {
+            title: 'Groene & Blauwe Diaconie Weeshuis',
+            description: 'One Marie who lived there 6 years ago from that case in 1767, but ran away and worked as prostitute, according to the confessions of Wijtske Johannes Van Schinken. Her husband lived in Friesland. Derkje Derks lived here while she worked as a prostitute.',
+            imageUrl: null,
+        },
+        marker16: {
+            title: 'Folkingestraat',
+            description: 'Van Schinken lived and worked here, with people who at the time of the hearing owned the Jagtwaagen. She names a client who visited her there.',
+            imageUrl: null,
+        },
+        marker17: {
+            title: 'Herberg de Oude David',
+            description: 'Derkje Derks was found here unconscious, she was convicted for prostitution in 1768. In 1735, there was a group of people was banned from Groningen for “hoererij” whilst they were staying at the inn.',
+            imageUrl: null,
+        },
+        marker18: {
+            title: 'Visscherstraat',
+            description: 'Vrouke Davids van Norden lived here. She made a living with knitting, and she worked in prostitution to make ends meet. It is not certain whether she also worked in this street or not. She had a child with Hindrik de Beseembinder, who lived in the Jonkerenstraat whom she was not married to. Margijn Roelfs van Slochteren, who was a prostitute, lived here and was convicted in 1761. Antje Doedens van Zuurdijk held a brothel here and was convicted in 1746.',
+            imageUrl: null,
+        },
+        marker19: {
+            title: 'Leliestraat',
+            description: 'Vrouke Davids van Norden has lived here as well—she had multiple places in the city that she stayed in during her time there. She says in her hearings that she moved to Groningen from Amsterdam 3 years before her hearings.',
+            imageUrl: null,
+        },
+        marker20: {
+            title: 'Stoeldraaierstraat',
+            description: 'Vrouke Davids van Norden lived and worked here—“in welck laatste quartier wel manvolk kwam, welke niet kent, met welcke egter wel hoererij heeft bedreven zijnde.',
+            imageUrl: null,
+        },
+        marker21: {
+            title: 'Pelsterstraat, corner with Nieuwstadt',
+            description: 'Vrouke Davids van Norden worked here, it seems that this is where Hindrik had paid her for her services. It is unclear whether he lived there or whether it was in a brothel or otherwise assigned place where prostitution could take place.',
+            imageUrl: null,
+        },
+        marker22: {
+            title: 'Guldenstraat',
+            description: 'Wijtske Johannes Van Schinken named this street as the location where the daughter of Berent Kok lived. According to Van Schinken, she was a prostitute.',
+            imageUrl: null,
         }
+        
         // Add more markers as needed
     };
     let selectedMarkerId = null;
@@ -237,40 +366,48 @@
     let scale = 1;
 
     function togglePopup(markerId) {
-        const popup = document.getElementById('popup');
-        const marker = document.getElementById(markerId);
+    const popup = document.getElementById('popup');
+    const marker = document.getElementById(markerId);
 
-        const content = markerContents[markerId];
+    const content = markerContents[markerId];
 
-        if (selectedMarkerId === markerId && popup.style.display !== 'none') {
-            // Hide popup if clicking on the same marker
-            hidePopup();
-        } else {
-            // Show popup for the selected marker
-            const rect = marker.getBoundingClientRect();
-            const centerY = rect.top + rect.height / 2;
+    if (selectedMarkerId === markerId && popup.style.display !== 'none') {
+        // Hide popup if clicking on the same marker
+        hidePopup();
+    } else {
+        // Show popup for the selected marker
+        const rect = marker.getBoundingClientRect();
+        const centerY = rect.top + rect.height / 2;
 
-            // Check if the marker is closer to the bottom of the map/screen
-            const isCloserToBottom = centerY > window.innerHeight / 2;
+        // Calculate whether the marker is closer to the bottom or top of the screen
+        const isCloserToBottom = centerY > window.innerHeight / 2;
 
-            // Adjust vertical position of the popup based on marker position
-            const popupTop = isCloserToBottom ? rect.top - popup.offsetHeight : rect.bottom;
+        // Adjust vertical position of the popup based on marker position
+        const popupTop = isCloserToBottom
+            ? rect.top - popup.offsetHeight
+            : rect.bottom;
 
-            popup.innerHTML = `
-                <h3>${content.title}</h3>
-                <p>${content.description}</p>
-                <img src="${content.imageUrl}" alt="${content.title}">
-            `;
+        // Create a variable to hold the img tag HTML
+        let imgTagHTML = '';
 
-            popup.style.left = rect.left + rect.width / 2 + 'px';
-            popup.style.top = popupTop + 'px';
-            popup.style.display = 'block';
-
-            selectedMarkerId = markerId;
+        // Check if there's a valid image URL, and include the img tag if available
+        if (content.imageUrl) {
+            imgTagHTML = `<img src="${content.imageUrl}" alt="${content.title}">`;
         }
+
+        popup.innerHTML = `
+            <h3>${content.title}</h3>
+            <p>${content.description}</p>
+            ${imgTagHTML}
+        `;
+
+        popup.style.left = rect.left + rect.width / 2 + 'px';
+        popup.style.top = popupTop + 'px';
+        popup.style.display = 'block';
+
+        selectedMarkerId = markerId;
     }
-
-
+}
 
     function hidePopup() {
         const popup = document.getElementById('popup');
@@ -280,37 +417,6 @@
 
     const mapContainer = document.getElementById('map-container');
 
-    mapContainer.addEventListener('mousemove', (e) => {
-        const sensitivity = 0.01; // Adjust this value for movement sensitivity
-        offsetX = (e.clientX - window.innerWidth / 2) * sensitivity;
-        offsetY = (e.clientY - window.innerHeight / 2) * sensitivity;
-        updateTransform();
-    });
-
-    mapContainer.addEventListener('wheel', (e) => {
-        // Adjust this value to control zoom speed
-        const zoomSpeed = 0.0;
-
-        const mouseX = e.clientX - window.innerWidth / 2;
-        const mouseY = e.clientY - window.innerHeight / 2;
-
-        if (e.deltaY > 0) {
-            // Zoom out
-            scale -= zoomSpeed;
-        } else {
-            // Zoom in
-            scale += zoomSpeed;
-        }
-
-        // Ensure scale stays within a reasonable range
-        scale = Math.max(0.5, Math.min(scale, 2));
-
-        // Adjust translation to zoom around the mouse position
-        offsetX = mouseX - (mouseX - offsetX) * scale;
-        offsetY = mouseY - (mouseY - offsetY) * scale;
-
-        updateTransform();
-    });
 
     document.addEventListener('click', function () {
         const introPopup = document.querySelector('.intro-popup');
@@ -330,7 +436,8 @@
         const popup = document.getElementById('popup');
         const isMarker = e.target.classList.contains('mark1') || 
                         e.target.classList.contains('mark2') || 
-                        e.target.classList.contains('mark3');
+                        e.target.classList.contains('mark3') || 
+                        e.target.classList.contains('mark4');
 
         if (isMarker) {
             const markerId = e.target.id;
@@ -340,9 +447,66 @@
         }
     });
 
-    function updateTransform() {
-        mapContainer.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+    function adjustMarkerPositions() {
+        const mapContainer = document.getElementById('map-container');
+        const containerRect = mapContainer.getBoundingClientRect();
+        
+        // Aspect ratio of the map image (width / height)
+        const aspectRatio = 1903 / 963; // Replace with your map's aspect ratio
+
+        // Calculate the displayed dimensions of the map image
+        let displayedWidth, displayedHeight;
+        if (containerRect.width / containerRect.height > aspectRatio) {
+            // Container is wider than the image
+            displayedHeight = containerRect.height;
+            displayedWidth = displayedHeight * aspectRatio;
+        } else {
+            // Container is taller than the image
+            displayedWidth = containerRect.width;
+            displayedHeight = displayedWidth / aspectRatio;
+        }
+
+        // Adjust each marker
+        const markers = {
+            marker1: { left: 44, top: 74 }, // Replace with the initial percentage positions
+            marker2: { left: 48, top: 39 },
+            marker3: { left: 45, top: 68 },
+            marker4: { left: 45, top: 18 },
+            marker5: { left: 55, top: 50 },
+            marker6: { left: 59, top: 41 },
+            marker7: { left: 48, top: 33 },
+            marker8: { left: 61, top: 37 },
+            marker9: { left: 53, top: 67 },
+            marker10: { left: 47, top: 72 },
+            marker11: { left: 62, top: 33 },
+            marker12: { left: 67, top: 27 },
+            marker15: { left: 49, top: 27 },
+            marker16: { left: 57, top: 63 },
+            marker17: { left: 79, top: 71 },
+            marker18: { left: 42, top: 55 },
+            marker19: { left: 34, top: 49 },
+            marker20: { left: 51, top: 56 },
+            marker21: { left: 60, top: 60 },
+            marker22: { left: 53, top: 46.8 }
+        };
+
+        Object.entries(markers).forEach(([id, pos]) => {
+            const marker = document.getElementById(id);
+            if (marker) {
+                // Calculate the new position based on the displayed size of the map
+                const left = (displayedWidth * pos.left / 100) + (containerRect.width - displayedWidth) / 2;
+                const top = (displayedHeight * pos.top / 100) + (containerRect.height - displayedHeight) / 2;
+
+                marker.style.left = left + 'px';
+                marker.style.top = top + 'px';
+            }
+        });
     }
+
+    window.addEventListener('resize', adjustMarkerPositions);
+    document.addEventListener('DOMContentLoaded', adjustMarkerPositions);
+        
+
 </script>
 
 </body>
