@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Groningen Map</title>
     <style>
+
+    @keyframes fadeInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
         body {
     margin: 0;
     overflow: hidden;
@@ -16,7 +28,6 @@
     width: 100vw;
     height: 100vh;
     background: url('map.png') center/cover no-repeat;
-    perspective: 1000px;
 }
 
 .mark0 {
@@ -93,6 +104,10 @@
     overflow: auto; /* Enable scrollbars if the content exceeds the popup size */
     font-family: 'Georgia', sans-serif;
 }
+
+/*.popup p {
+    animation: fadeInLeft 0.5s ease-out forwards !important;
+}*/
 
 .popup img {
     max-width: 100%; /* Ensure images don't exceed the width of the popup */
@@ -192,10 +207,10 @@
 <body>
 
 <div class="intro-popup">
-    <h2 style="line-height: 0.2;">Welcome to this interactive map of Groningen!</h2>
+    <h2 style="line-height: 0.2;">Prositution in 18th Century Groningen Mapped</h2>
     <p style="line-height: 0.2;">By Isa Hamelink</p>
-    <h3 style="line-height: 0.2;">Click on any of the map markers to learn something about the city's past</h3> 
-    <p style="line-height: 3;">Click anywhere to start!</p>
+    <h3 style="line-height: 1;">Click on the colored markers to learn about the use of urban space by prostitutes in Groningen </h3> 
+    <p style="line-height: 4;">Click anywhere to start!</p>
     <div class="mark0" style="margin: 70px auto 10px; background: url('marker.png') center/cover no-repeat;"></div>
 </div>
 
